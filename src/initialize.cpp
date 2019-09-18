@@ -7,9 +7,7 @@
  * to keep execution time for this mode under a few seconds.
  */
 
-void initialize() {
-    lcd::initialize();
-}
+void initialize() {}
 
 /**
  * Runs while the robot is in the disabled state of Field Management System or
