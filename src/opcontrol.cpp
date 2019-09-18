@@ -160,9 +160,9 @@ void opcontrol() {
 			while(master.get_digital(DIGITAL_B)) delay(20);
 
 			if(trayPIDPtr->trayPIDRunning && trayPIDPtr->inTarget == 10 || trayPIDPtr->trayPIDRunning && trayPIDPtr->inTarget == 0) {
-				trayPIDPtr->inTarget = 740;
+				trayPIDPtr->inTarget = 1600;
 				trayPIDPtr->powerLimit = 60;
-			} else if(trayPIDPtr->trayPIDRunning && trayPIDPtr->inTarget == 740) {
+			} else if(trayPIDPtr->trayPIDRunning && trayPIDPtr->inTarget >= 1600) {
 				trayPIDPtr->inTarget = 10;
 				trayPIDPtr->powerLimit = 80;
 			}
@@ -184,6 +184,18 @@ void opcontrol() {
 			armMotor.move(-127);
 		} else {
 			armMotor.move(0);
+		}
+
+		// Intake control
+		if(master.get_digital(DIGITAL_L1) == 1) {
+			leftIntake.move(127);
+			rightIntake.move(127);
+		} else if(master.get_digital(DIGITAL_L2) == 1) {
+			leftIntake.move(-127);
+			rightIntake.move(-127);
+		} else {
+			leftIntake.move(0);
+			rightIntake.move(0);
 		}
 
 		// Delay task to stop CPU hogging
