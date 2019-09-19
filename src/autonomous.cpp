@@ -14,15 +14,19 @@
 
 void driveTrainLeft(int speed) {
     frontLeftMotor.move(speed);
+    backLeftMotor.move(speed);
 }
 
 void driveTrainRight(int speed) {
     frontRightMotor.move(speed);
+    backRightMotor.move(speed);
 }
 
 void driveTrainTurn(int speed) {
     frontLeftMotor.move(speed);
+    backLeftMotor.move(speed);
     frontRightMotor.move(-speed);
+    backRightMotor.move(-speed);
 }
 
 // Function that converts inches to ticks
@@ -31,7 +35,7 @@ int inchToTicks(float inch) {
     int ticks;
 
     // Convert the inches to ticks
-    ticks = inch * 176.384125 - 500;
+    ticks = inch * 176.384125 - 200;
 
     // Return ticks
     return ticks;
@@ -63,7 +67,9 @@ int timerValue(float seconds) {
 void driveTrainPID(float target, float waitTime, int maxPower = 110) {
     // Reset encoder values
     frontLeftMotor.tare_position();
+    backLeftMotor.tare_position();
     frontRightMotor.tare_position();
+    backRightMotor.tare_position();
 
     // PID variables decloration and initialization
     float kP = 0.3;
@@ -80,7 +86,7 @@ void driveTrainPID(float target, float waitTime, int maxPower = 110) {
     int error;
     int lastError;
 
-    float kP_C = 1.25;
+    float kP_C = 0.05;
     int errorDrift;
     float proportionDrift;
 
@@ -104,7 +110,7 @@ void driveTrainPID(float target, float waitTime, int maxPower = 110) {
 
     while(currentTime < waitTime) {
         // Calculate how far the robot is from the target
-        error = inchToTicks(target) - (frontLeftMotor.get_position() + frontRightMotor.get_position());
+        error = inchToTicks(target) - ((frontLeftMotor.get_position() - backLeftMotor.tare_position()) + (frontRightMotor.get_position() - backRightMotor.tare_position()));
 
         // Calculate the proportion
         proportion = kP * error;
@@ -149,7 +155,7 @@ void driveTrainPID(float target, float waitTime, int maxPower = 110) {
         }
         */
 
-        errorDrift = frontRightMotor.get_position() - frontLeftMotor.get_position();
+        errorDrift = (frontRightMotor.get_position() + backRightMotor.get_position()) - (frontLeftMotor.get_position() + backLeftMotor.get_position());
         proportionDrift = kP_C * errorDrift;
 
         // Set the motors to the final power
@@ -179,7 +185,9 @@ void driveTrainPID(float target, float waitTime, int maxPower = 110) {
 void driveTrainTurnPID(float target, float waitTime, int maxPower = 90) {
     // Reset encoder values
     frontLeftMotor.tare_position();
+    backLeftMotor.tare_position();
     frontRightMotor.tare_position();
+    backRightMotor.tare_position();
 
     // PID variables decloration and initialization
     float kP = 0.2;
@@ -216,7 +224,7 @@ void driveTrainTurnPID(float target, float waitTime, int maxPower = 90) {
 
     while(currentTime < waitTime) {
         // Calculate how far the robot is from the target
-        error = degreesToTicks(target) - (frontLeftMotor.get_position() - frontRightMotor.get_position());
+        error = degreesToTicks(target) - ((frontLeftMotor.get_position() + backLeftMotor.tare_position()) - (frontRightMotor.get_position() + backRightMotor.tare_position()));
 
         // Calculate the proportion
         proportion = kP * error;
@@ -262,12 +270,11 @@ void driveTrainTurnPID(float target, float waitTime, int maxPower = 90) {
         // Set motors to final power
         driveTrainTurn(finalPower);
 
-        /*
+        
         // Start the timer
-        if(error < 30) {
+        if(error < 2) {
             startTime = true;
         }
-        */
 
         // Set timer values
         if(startTime && currentTime == 0) {
@@ -285,11 +292,14 @@ void autonomous() {
     cout << "Staring auton" << endl;
     frontLeftMotor.tare_position();
     frontRightMotor.tare_position();
-    while(true) {
-        if((frontLeftMotor.get_position() + frontRightMotor.get_position()) / 2 < 220) {
-            driveTrainTurn(90);
-        } else {
-            driveTrainTurn(-5);
-        }
-    }
+
+    driveTrainPID(32, 3000);
+
+    // while(true) {
+    //     if((frontLeftMotor.get_position() + frontRightMotor.get_position()) / 2 < 220) {
+    //         driveTrainTurn(90);
+    //     } else {
+    //         driveTrainTurn(-5);
+    //     }
+    // }
 }
