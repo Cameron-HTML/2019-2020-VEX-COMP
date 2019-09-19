@@ -14,112 +14,11 @@
  * task, not resume it from where it left off.
  */
 
-typedef struct trayPIDArg {
-	bool trayPIDRunning = false;
-	int inTarget = 0;
-	int powerLimit = 0;
-} _trayPIDArg;
-
-	// Function for the PID control
-void trayPID(void* argument) {
-	_trayPIDArg *trayPIDPtr = (_trayPIDArg *)argument;
-
-    // Reset encoder value
-    trayMotor.tare_position();
-
-	int target = 0;
-
-    // PID variables decloration and initialization
-    float kP = 0.3;
-    float kI = 0.00001;
-    float kD = 0.1;
-
-    // Proportion variable decloration
-    float proportion;
-    float intergral;
-    int intergralRaw;
-    int derivative;
-
-    // Error variable decloration
-    int error;
-    int lastError;
-
-    // Variable so the robot know when it should use intergral
-    const float intergralActiveZone = 10;
-
-    // Variable to limit the value of intergßral
-    int intergralPowerLimit = 50 / kI;
-
-	int maxPower = 0;
-
-    // Final output power/speed
-    int finalPower;
-
-    while(true) {
-		if(trayPIDPtr->trayPIDRunning) {
-			target = trayPIDPtr->inTarget;
-			maxPower = trayPIDPtr->powerLimit;
-
-			// Calculate how far the robot is from the target
-			error = target - trayMotor.get_position();
-
-			// Calculate the proportion
-			proportion = kP * error;
-
-			// Check if intergral should be used
-			if(abs(error) < intergralActiveZone && error != 0) {
-				intergralRaw += error;
-			} else {
-				intergralRaw = 0;
-			}
-
-			// Limit the raw intergral
-			if(intergralRaw > intergralPowerLimit) {
-				intergralRaw = intergralPowerLimit;
-			} else if(intergralRaw < -intergralPowerLimit) {
-				intergralRaw = -intergralPowerLimit;
-			}
-
-			// Scale intergral
-			intergral = kI * intergralRaw;
-
-			// Calculate derivative
-			derivative = kD * (error - lastError);
-			
-			// Update last error
-			lastError = error;
-
-			// Set derivative to 0 if at target
-			if(error == 0) {
-				derivative = 0;
-			}
-
-			// Calculate the final power to send to the motors
-			finalPower = proportion + intergral + derivative;
-
-			// Limit final power
-			if(finalPower > maxPower) {
-				finalPower = maxPower;
-			} else if(finalPower < -maxPower) {
-				finalPower = -maxPower;
-			}
-
-			// Set the motors to the final power
-			trayMotor.move(finalPower);
-
-			cout << "Running" << endl;
-		}
-
-        // Delay code to stop CPU hoggin
-        delay(20);
-    }
-}
-
 void opcontrol() {
 	Controller master(E_CONTROLLER_MASTER);
 
 	_trayPIDArg* trayPIDPtr = new _trayPIDArg();
-	Task TrayTask(trayPID, trayPIDPtr);
+	Task TrayTask(trayPID, trayPIDPtr, "TrayPIDTask");
 	
 	trayMotor.tare_position();
 
