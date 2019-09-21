@@ -7,52 +7,85 @@
  * to keep execution time for this mode under a few seconds.
  */
 
-lv_obj_t * myButton;
-lv_obj_t * myButtonLabel;
-lv_obj_t * myLabel;
-
-lv_style_t myButtonStyleREL; //relesed style
-lv_style_t myButtonStylePR; //pressed style
-
-static lv_res_t btn_click_action(lv_obj_t * btn)
-{
-    uint8_t id = lv_obj_get_free_num(btn); //id usefull when there are multiple buttons
-
-    if(id == 0)
-    {
-        lv_btn_set_toggle(btn, true);
-    }
-
-    return LV_RES_OK;
-}
+// static void autoSelectEventHandler(lv_obj_t * obj, lv_event_t event) {
+//     // if(event == LV_EVENT_VALUE_CHANGED) {
+//     //     cout << "Toggled" << endl;
+//     // }
+// }
 
 void initialize() {
-    lv_style_copy(&myButtonStyleREL, &lv_style_plain);
-    myButtonStyleREL.body.main_color = LV_COLOR_MAKE(255, 0, 0);
-    myButtonStyleREL.body.grad_color = LV_COLOR_MAKE(255, 0, 0);
-    myButtonStyleREL.body.radius = 0;
-    myButtonStyleREL.text.color = LV_COLOR_MAKE(255, 255, 255);
+    static lv_style_t autoFieldStyle;
+    lv_style_copy(&autoFieldStyle, &lv_style_plain_color);
+    autoFieldStyle.body.main_color = LV_COLOR_GRAY;
+    autoFieldStyle.body.grad_color = LV_COLOR_GRAY;
 
-    lv_style_copy(&myButtonStylePR, &lv_style_plain);
-    myButtonStylePR.body.main_color = LV_COLOR_MAKE(255, 0, 0);
-    myButtonStylePR.body.grad_color = LV_COLOR_MAKE(0, 0, 255);
-    myButtonStylePR.body.radius = 0;
-    myButtonStylePR.text.color = LV_COLOR_MAKE(255, 255, 255);
+    lv_obj_t * autoField;
+    autoField = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_size(autoField, 250, 250);
+    lv_obj_set_style(autoField, &autoFieldStyle);
+    lv_obj_align(autoField, NULL, LV_ALIGN_IN_RIGHT_MID, 0, 0);
 
-    myButton = lv_btn_create(lv_scr_act(), NULL); //create button, lv_scr_act() is deafult screen object
-    lv_obj_set_free_num(myButton, 0); //set button is to 0
-    lv_btn_set_action(myButton, LV_BTN_ACTION_CLICK, btn_click_action); //set function to be called on button click
-    lv_btn_set_style(myButton, LV_BTN_STYLE_REL, &myButtonStyleREL); //set the relesed style
-    lv_btn_set_style(myButton, LV_BTN_STYLE_PR, &myButtonStylePR); //set the pressed style
-    lv_obj_set_size(myButton, 200, 50); //set the button size
-    lv_obj_align(myButton, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 10); //set the position to top mid
+    static lv_style_t redRightButtonStyle;
+    lv_style_copy(&redRightButtonStyle, &lv_style_plain_color);
+    redRightButtonStyle.body.main_color = LV_COLOR_RED;
+    redRightButtonStyle.body.grad_color = LV_COLOR_RED;
+    redRightButtonStyle.body.border.color = LV_COLOR_WHITE;
+    redRightButtonStyle.body.border.width = 1;
 
-    myButtonLabel = lv_label_create(myButton, NULL); //create label and puts it inside of the button
-    lv_label_set_text(myButtonLabel, "Click the Button"); //sets label text
+    lv_obj_t * redRightButton;
+    redRightButton = lv_btn_create(lv_scr_act(), NULL);
+    //lv_obj_set_event_cb(redRightButton, autoSelectEventHandler)
+    lv_obj_set_size(redRightButton, 140, 50);
+    lv_obj_set_style(redRightButton, &redRightButtonStyle);
+    lv_obj_align(redRightButton, NULL, LV_ALIGN_IN_LEFT_MID, 10, -80);
+    lv_btn_set_toggle(redRightButton, true);
+    lv_btn_toggle(redRightButton);
 
-    myLabel = lv_label_create(lv_scr_act(), NULL); //create label and puts it on the screen
-    lv_label_set_text(myLabel, "Button has not been clicked yet"); //sets label text
-    lv_obj_align(myLabel, NULL, LV_ALIGN_IN_LEFT_MID, 10, 0); //set the position to center
+
+    static lv_style_t redLeftBoxStyle;
+    lv_style_copy(&redLeftBoxStyle, &lv_style_plain_color);
+    redLeftBoxStyle.body.main_color = LV_COLOR_RED;
+    redLeftBoxStyle.body.grad_color = LV_COLOR_RED;
+    redLeftBoxStyle.body.border.color = LV_COLOR_WHITE;
+    redLeftBoxStyle.body.border.width = 1;
+
+    lv_obj_t * redLeftBox;
+    redLeftBox = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_size(redLeftBox, 140, 50);
+    lv_obj_set_style(redLeftBox, &redLeftBoxStyle);
+    lv_obj_align(redLeftBox, NULL, LV_ALIGN_IN_LEFT_MID, 10, -27);
+
+    static lv_style_t blueRightBoxStyle;
+    lv_style_copy(&blueRightBoxStyle, &lv_style_plain_color);
+    blueRightBoxStyle.body.main_color = LV_COLOR_BLUE;
+    blueRightBoxStyle.body.grad_color = LV_COLOR_BLUE;
+    blueRightBoxStyle.body.border.color = LV_COLOR_WHITE;
+    blueRightBoxStyle.body.border.width = 1;
+
+    lv_obj_t * blueRightBox;
+    blueRightBox = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_size(blueRightBox, 140, 50);
+    lv_obj_set_style(blueRightBox, &blueRightBoxStyle);
+    lv_obj_align(blueRightBox, NULL, LV_ALIGN_IN_LEFT_MID, 10, 26);
+
+    static lv_style_t blueLeftBoxStyle;
+    lv_style_copy(&blueLeftBoxStyle, &lv_style_plain_color);
+    blueLeftBoxStyle.body.main_color = LV_COLOR_BLUE;
+    blueLeftBoxStyle.body.grad_color = LV_COLOR_BLUE;
+    blueLeftBoxStyle.body.border.color = LV_COLOR_WHITE;
+    blueLeftBoxStyle.body.border.width = 1;
+
+    lv_obj_t * blueLeftBox;
+    blueLeftBox = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_size(blueLeftBox, 140, 50);
+    lv_obj_set_style(blueLeftBox, &blueLeftBoxStyle);
+    lv_obj_align(blueLeftBox, NULL, LV_ALIGN_IN_LEFT_MID, 10, 79);
+
+    // lv_obj_t * redRight = lv_label_create(lv_scr_act(), NULL);
+    // lv_label_set_recolor(redRight, true);
+    // lv_obj_align(redRight, NULL, LV_ALIGN_IN_LEFT_MID, 0, 0);
+    // lv_label_set_align(redRight, LV_LABEL_ALIGN_LEFT);
+    // lv_label_set_text(redRight, "#000000 Red Right");
 }
 
 /**

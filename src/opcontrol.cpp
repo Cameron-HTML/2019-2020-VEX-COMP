@@ -18,9 +18,13 @@ void opcontrol() {
 	Controller master(E_CONTROLLER_MASTER);
 
 	_trayPIDArg* trayPIDPtr = new _trayPIDArg();
-	Task TrayTask(trayPID, trayPIDPtr, "TrayPIDTask");
+	Task trayTask(trayPID, trayPIDPtr, "TrayPIDTask");
+
+	_armPIDArg* armPIDPtr = new _armPIDArg();
+	Task armTask(armPID, armPIDPtr, "ArmPIDTask");
 	
 	trayMotor.tare_position();
+	armMotor.tare_position();
 
 	// Variable decloration and initialization
 	int threshold = 15;
@@ -58,19 +62,27 @@ void opcontrol() {
 		if(master.get_digital(DIGITAL_B)) {
 			while(master.get_digital(DIGITAL_B)) delay(20);
 
-			if(trayPIDPtr->trayPIDRunning && trayPIDPtr->inTarget == 10 || trayPIDPtr->trayPIDRunning && trayPIDPtr->inTarget == 0) {
-				trayPIDPtr->inTarget = 1600;
+			trayPIDPtr->trayPIDRunning = true;
+
+			if(trayPIDPtr->inTarget <= 10) {
+				trayPIDPtr->inTarget = 5500;
 				trayPIDPtr->powerLimit = 60;
-			} else if(trayPIDPtr->trayPIDRunning && trayPIDPtr->inTarget >= 1600) {
+			} else if(trayPIDPtr->inTarget >= 1600) {
 				trayPIDPtr->inTarget = 10;
 				trayPIDPtr->powerLimit = 80;
 			}
 		}
 
+		if(trayPIDPtr->powerLimit == 80 && trayMotor.get_position() <= 20) {
+			trayPIDPtr->trayPIDRunning = false;
+		}
+
 		// Tray manual control
 		if(master.get_digital(DIGITAL_R1) == 1) {
+			trayPIDPtr->trayPIDRunning = false;
 			trayMotor.move(80);
 		} else if(master.get_digital(DIGITAL_R2) == 1) {
+			trayPIDPtr->trayPIDRunning = false;
 			trayMotor.move(-90);
 		} else {
 			trayMotor.move(0);
@@ -78,11 +90,20 @@ void opcontrol() {
 
 		// Arm control
 		if(master.get_digital(DIGITAL_X) == 1) {
+			armPIDPtr->armPIDRunning = false;
 			armMotor.move(127);
+			armPIDPtr->inTarget = armMotor.get_position();
 		} else if(master.get_digital(DIGITAL_Y) == 1) {
+			armPIDPtr->armPIDRunning = false;
 			armMotor.move(-127);
+			armPIDPtr->inTarget = armMotor.get_position();
 		} else {
-			armMotor.move(0);
+			if(armMotor.get_position() >= 60) {
+				armPIDPtr->armPIDRunning = true;
+			} else {
+				armPIDPtr->armPIDRunning = false;
+				armMotor.move(0);
+			}
 		}
 
 		// Intake control
@@ -99,6 +120,6 @@ void opcontrol() {
 
 		// Delay task to stop CPU hogging
 		delay(20);
-		cout << trayMotor.get_position() << endl;
+		cout << armMotor.get_position() << endl;
 	}
 }
