@@ -13,6 +13,11 @@
 //     // }
 // }
 
+static lv_res_t buttonPressEvent(struct _lv_obj_t * obj) {
+    cout << "Button PRESSED" << endl;
+    return LV_RES_INV;
+}
+
 void initialize() {
     static lv_style_t autoFieldStyle;
     lv_style_copy(&autoFieldStyle, &lv_style_plain_color);
@@ -25,35 +30,30 @@ void initialize() {
     lv_obj_set_style(autoField, &autoFieldStyle);
     lv_obj_align(autoField, NULL, LV_ALIGN_IN_RIGHT_MID, 0, 0);
 
-    static lv_style_t redRightButtonStyle;
-    lv_style_copy(&redRightButtonStyle, &lv_style_plain_color);
-    redRightButtonStyle.body.main_color = LV_COLOR_RED;
-    redRightButtonStyle.body.grad_color = LV_COLOR_RED;
-    redRightButtonStyle.body.border.color = LV_COLOR_WHITE;
-    redRightButtonStyle.body.border.width = 1;
+    static lv_style_t redButtonStyle;
+    lv_style_copy(&redButtonStyle, &lv_style_plain_color);
+    redButtonStyle.body.main_color = LV_COLOR_RED;
+    redButtonStyle.body.grad_color = LV_COLOR_RED;
+    redButtonStyle.body.border.color = LV_COLOR_WHITE;
+    redButtonStyle.body.border.width = 1;
+
+    static lv_style_t redButtonStyleTGL;
+    lv_style_copy(&redButtonStyleTGL, &lv_style_plain_color);
+    redButtonStyleTGL.body.main_color = LV_COLOR_MAKE(245, 87, 76);
+    redButtonStyleTGL.body.grad_color = LV_COLOR_MAKE(245, 87, 76);
+    redButtonStyleTGL.body.border.color = LV_COLOR_WHITE;
+    redButtonStyleTGL.body.border.width = 1;
 
     lv_obj_t * redRightButton;
     redRightButton = lv_btn_create(lv_scr_act(), NULL);
-    //lv_obj_set_event_cb(redRightButton, autoSelectEventHandler)
+    lv_btn_set_style(redRightButton, LV_BTN_STYLE_TGL_PR, &redButtonStyle);
+    lv_btn_set_style(redRightButton, LV_BTN_STYLE_TGL_REL, &redButtonStyleTGL);
+    lv_btn_set_style(redRightButton, LV_BTN_STYLE_REL, &redButtonStyle);
+    lv_btn_set_style(redRightButton, LV_BTN_STYLE_PR, &redButtonStyle);
+    lv_btn_set_style(redRightButton, LV_BTN_STYLE_INA, &redButtonStyle);
     lv_obj_set_size(redRightButton, 140, 50);
-    lv_obj_set_style(redRightButton, &redRightButtonStyle);
     lv_obj_align(redRightButton, NULL, LV_ALIGN_IN_LEFT_MID, 10, -80);
-    lv_btn_set_toggle(redRightButton, true);
-    lv_btn_toggle(redRightButton);
-
-
-    static lv_style_t redLeftBoxStyle;
-    lv_style_copy(&redLeftBoxStyle, &lv_style_plain_color);
-    redLeftBoxStyle.body.main_color = LV_COLOR_RED;
-    redLeftBoxStyle.body.grad_color = LV_COLOR_RED;
-    redLeftBoxStyle.body.border.color = LV_COLOR_WHITE;
-    redLeftBoxStyle.body.border.width = 1;
-
-    lv_obj_t * redLeftBox;
-    redLeftBox = lv_obj_create(lv_scr_act(), NULL);
-    lv_obj_set_size(redLeftBox, 140, 50);
-    lv_obj_set_style(redLeftBox, &redLeftBoxStyle);
-    lv_obj_align(redLeftBox, NULL, LV_ALIGN_IN_LEFT_MID, 10, -27);
+    lv_btn_set_action(redRightButton, LV_BTN_ACTION_PR, buttonPressEvent);
 
     static lv_style_t blueRightBoxStyle;
     lv_style_copy(&blueRightBoxStyle, &lv_style_plain_color);

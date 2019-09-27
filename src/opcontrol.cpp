@@ -65,7 +65,7 @@ void opcontrol() {
 			trayPIDPtr->trayPIDRunning = true;
 
 			if(trayPIDPtr->inTarget <= 10) {
-				trayPIDPtr->inTarget = 5500;
+				trayPIDPtr->inTarget = 4300;
 				trayPIDPtr->powerLimit = 60;
 			} else if(trayPIDPtr->inTarget >= 1600) {
 				trayPIDPtr->inTarget = 10;
@@ -73,7 +73,7 @@ void opcontrol() {
 			}
 		}
 
-		if(trayPIDPtr->powerLimit == 80 && trayMotor.get_position() <= 20) {
+		if(trayPIDPtr->powerLimit == 80 && trayMotor.get_position() <= 25) {
 			trayPIDPtr->trayPIDRunning = false;
 		}
 
