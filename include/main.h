@@ -60,7 +60,7 @@ extern Motor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor, tra
 extern int AutoSelection;
 
 typedef struct trayPIDArg {
-	bool trayPIDRunning = false;
+	bool trayPIDRunning = true;
 	int inTarget = 0;
 	int powerLimit = 0;
 } _trayPIDArg;
@@ -70,6 +70,9 @@ typedef struct armPIDArg {
 	int inTarget = 0;
 	int powerLimit = 127;
 } _armPIDArg;
+
+extern _trayPIDArg* trayPIDPtr;
+extern _armPIDArg* armPIDPtr;
 
 // Function for the PID control
 inline void trayPID(void* argument) {

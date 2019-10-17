@@ -16,15 +16,10 @@
 
 void opcontrol() {
 	Controller master(E_CONTROLLER_MASTER);
-
-	_trayPIDArg* trayPIDPtr = new _trayPIDArg();
-	Task trayTask(trayPID, trayPIDPtr, "TrayPIDTask");
-
-	_armPIDArg* armPIDPtr = new _armPIDArg();
-	Task armTask(armPID, armPIDPtr, "ArmPIDTask");
 	
 	trayMotor.tare_position();
 	armMotor.tare_position();
+
 
 	// Variable decloration and initialization
 	int threshold = 15;
@@ -65,37 +60,42 @@ void opcontrol() {
 			trayPIDPtr->trayPIDRunning = true;
 
 			if(trayPIDPtr->inTarget <= 10) {
-				trayPIDPtr->inTarget = 4300;
-				trayPIDPtr->powerLimit = 60;
+				trayPIDPtr->inTarget = 4000;
+				trayPIDPtr->powerLimit = 70;
 			} else if(trayPIDPtr->inTarget >= 1600) {
 				trayPIDPtr->inTarget = 10;
 				trayPIDPtr->powerLimit = 80;
 			}
 		}
 
-		if(trayPIDPtr->powerLimit == 80 && trayMotor.get_position() <= 25) {
-			trayPIDPtr->trayPIDRunning = false;
-		}
-
 		// Tray manual control
 		if(master.get_digital(DIGITAL_R1) == 1) {
 			trayPIDPtr->trayPIDRunning = false;
 			trayMotor.move(80);
+			trayPIDPtr->inTarget = trayMotor.get_position();
 		} else if(master.get_digital(DIGITAL_R2) == 1) {
 			trayPIDPtr->trayPIDRunning = false;
 			trayMotor.move(-90);
+			trayPIDPtr->inTarget = trayMotor.get_position();
 		} else {
-			trayMotor.move(0);
+			if(trayPIDPtr->powerLimit == 80 && trayMotor.get_position() <= 20) {
+				trayPIDPtr->trayPIDRunning = false;
+				trayMotor.move(0);
+			} else {
+				if(!trayPIDPtr->trayPIDRunning) {
+					trayPIDPtr->trayPIDRunning = true;
+				}
+			}
 		}
 
 		// Arm control
 		if(master.get_digital(DIGITAL_X) == 1) {
 			armPIDPtr->armPIDRunning = false;
-			armMotor.move(127);
+			armMotor.move(100);
 			armPIDPtr->inTarget = armMotor.get_position();
-		} else if(master.get_digital(DIGITAL_Y) == 1) {
+		} else if(master.get_digital(DIGITAL_Y) == 1 && armMotor.get_position() != 50) {
 			armPIDPtr->armPIDRunning = false;
-			armMotor.move(-127);
+			armMotor.move(-100);
 			armPIDPtr->inTarget = armMotor.get_position();
 		} else {
 			if(armMotor.get_position() >= 60) {
@@ -108,11 +108,21 @@ void opcontrol() {
 
 		// Intake control
 		if(master.get_digital(DIGITAL_L1) == 1) {
-			leftIntake.move(127);
-			rightIntake.move(127);
+			if(trayPIDPtr->inTarget != 4000) {
+				leftIntake.move(127);
+				rightIntake.move(127);
+			} else {
+				leftIntake.move(50);
+				rightIntake.move(50);
+			}
 		} else if(master.get_digital(DIGITAL_L2) == 1) {
-			leftIntake.move(-127);
-			rightIntake.move(-127);
+			if(trayPIDPtr->inTarget != 4000) {
+				leftIntake.move(-127);
+				rightIntake.move(-127);
+			} else {
+				leftIntake.move(50);
+				rightIntake.move(50);
+			}
 		} else {
 			leftIntake.move(0);
 			rightIntake.move(0);
@@ -120,6 +130,5 @@ void opcontrol() {
 
 		// Delay task to stop CPU hogging
 		delay(20);
-		cout << armMotor.get_position() << endl;
 	}
 }

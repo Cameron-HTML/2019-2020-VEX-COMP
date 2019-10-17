@@ -14,11 +14,13 @@
 // }
 
 static lv_res_t buttonPressEvent(struct _lv_obj_t * obj) {
-    cout << "Button PRESSED" << endl;
-    return LV_RES_INV;
+    lv_btn_toggle(obj);
 }
 
 void initialize() {
+    Task armTask(armPID, armPIDPtr, "ArmPIDTask");
+    Task trayTask(trayPID, trayPIDPtr, "TrayPIDTask");
+
     static lv_style_t autoFieldStyle;
     lv_style_copy(&autoFieldStyle, &lv_style_plain_color);
     autoFieldStyle.body.main_color = LV_COLOR_GRAY;

@@ -10,3 +10,6 @@ Motor rightIntake(11, E_MOTOR_GEARSET_18, true, E_MOTOR_ENCODER_COUNTS);
 Motor armMotor(20, E_MOTOR_GEARSET_36, true, E_MOTOR_ENCODER_COUNTS);
 
 int autoSelection = 0;
+
+_trayPIDArg* trayPIDPtr = new _trayPIDArg();
+_armPIDArg* armPIDPtr = new _armPIDArg();

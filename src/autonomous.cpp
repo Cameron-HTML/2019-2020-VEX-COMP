@@ -86,7 +86,7 @@ void driveTrainPID(float target, float waitTime, int maxPower = 110) {
     int error;
     int lastError;
 
-    float kP_C = 0.05;
+    float kP_C = 0.09;
     int errorDrift;
     float proportionDrift;
 
@@ -147,14 +147,13 @@ void driveTrainPID(float target, float waitTime, int maxPower = 110) {
         finalPower = proportion + intergral + derivative;
 
         // Limit final power
-        /*
+        
         if(finalPower > maxPower) {
             finalPower = maxPower;
         } else if(finalPower < -maxPower) {
             finalPower = -maxPower;
         }
-        */
-
+        
         errorDrift = (frontRightMotor.get_position() + backRightMotor.get_position()) - (frontLeftMotor.get_position() + backLeftMotor.get_position());
         proportionDrift = kP_C * errorDrift;
 
@@ -288,12 +287,26 @@ void driveTrainTurnPID(float target, float waitTime, int maxPower = 90) {
     driveTrainTurn(0);
 }
 
+void intake(int lSpeed, int rSpeed) {
+    leftIntake.move(lSpeed);
+    rightIntake.move(rSpeed);
+}
+
 void autonomous() {
-    cout << "Staring auton" << endl;
+   cout << "Staring auton" << endl;
     frontLeftMotor.tare_position();
     frontRightMotor.tare_position();
+    armMotor.tare_position();
+    trayMotor.tare_position();
 
-    driveTrainPID(32, 3000);
+    armPIDPtr->armPIDRunning = true;
+    armPIDPtr->inTarget = 800;
+    delay(1000);
+    armPIDPtr->inTarget = 300;
+    intake(127, 127);
+    driveTrainPID(46, 3000, 90);
+    delay(500);
+    driveTrainPID(-23, 3000, 127);
 
     // while(true) {
     //     if((frontLeftMotor.get_position() + frontRightMotor.get_position()) / 2 < 220) {
