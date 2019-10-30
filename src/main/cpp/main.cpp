@@ -1,51 +1,53 @@
 //////////////////////////////////////////////////////////////////////////////
 //                                                                          //
-//                These functions are called by main.cpp                    //
-//                           Make changes here                              //
+//               This file is requried for the code to run.                 //
+//         Refer to 'robot.cpp' to make changes to these functions          //
 //                                                                          //
 //////////////////////////////////////////////////////////////////////////////
-#include "../include/robot.hpp"
+#include "../include/main.hpp"
 
-RobotClass::RobotClass() :
-    master(E_CONTROLLER_MASTER),
-    partner(E_CONTROLLER_PARTNER)
-{
-    Drivetrain = new DrivetrainClass();
+MainClass::MainClass() {
+    Robot = new RobotClass();
 }
 
 //////////////////////////////////////////////////////////////////////////////
 //                               Initialize                                 //
 //                   Runs when the program first starts                     //
 //////////////////////////////////////////////////////////////////////////////
-void RobotClass::initialize() {
+void initialize() {
+    Main.Robot->initialize();
 }
 
 //////////////////////////////////////////////////////////////////////////////
 //                                 Disabled                                 //
 //               Only runs when the robot is in disabled mode               //
 //////////////////////////////////////////////////////////////////////////////
-void RobotClass::disabled() {}
+void disabled() {
+    Main.Robot->disabled();
+}
 
 //////////////////////////////////////////////////////////////////////////////
 //                         Competition-Initialize                           //
 //           Only runs when plugged into a comp/field controller            //
 //////////////////////////////////////////////////////////////////////////////
-void RobotClass::competition_initialize() {}
+void competition_initialize() {
+    Main.Robot->competition_initialize();
+}
 
 //////////////////////////////////////////////////////////////////////////////
 //                                Autonomous                                //
 //              Only runs when the robot is in autonomous mode              //
 //////////////////////////////////////////////////////////////////////////////
-void RobotClass::autonomous() {}
+void autonomous() {
+     Main.Robot->autonomous();
+}
 
 //////////////////////////////////////////////////////////////////////////////
 //                             Operator Control                             //
 //               Only runs when the robot is in opcontrol mode              //
 //////////////////////////////////////////////////////////////////////////////
-void RobotClass::opcontrol() {
-    threshold = 15;
-
-    leftVal = (threshold > master.get_analog(ANALOG_LEFT_Y)) ? 0 : master.get_analog(ANALOG_LEFT_Y);
-    rightVal = (threshold > master.get_analog(ANALOG_RIGHT_Y)) ? 0 : master.get_analog(ANALOG_RIGHT_Y);
-    Drivetrain->update(leftVal, rightVal);
+void opcontrol() {
+    while (true){
+        Main.Robot->opcontrol();
+    }
 }
