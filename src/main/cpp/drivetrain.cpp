@@ -36,9 +36,6 @@ void DrivetrainClass::driveTrainTurn(int speed) {
 
 // Function that converts inches to ticks
 int DrivetrainClass::inchToTicks(float inch) {
-    // Decloration of output variable
-    int ticks;
-
     // Convert the inches to ticks
     ticks = inch * 176.384125 - 200;
 
@@ -48,7 +45,7 @@ int DrivetrainClass::inchToTicks(float inch) {
 
 int DrivetrainClass::timerValue(float seconds) {
     // Convert seconds to milliseconds
-    int milliSeconds = seconds * 1000;
+    milliSeconds = seconds * 1000;
 
     if(milliSeconds < 250) {
         milliSeconds = 250;
@@ -59,56 +56,20 @@ int DrivetrainClass::timerValue(float seconds) {
 
 // Function that converts degrees to ticks
 int DrivetrainClass::degreesToTicks(float degrees) {
-    // Test 10 times and change value
-    int ticksPerTurn = 3000;
-
     // Calculate ticks
-    int ticks = degrees * ticksPerTurn / 360;
+    ticks = degrees * ticksPerTurn / 360;
 
     return ticks;
 }
 
 // Function for the PID control
 void DrivetrainClass::PID(float target, float waitTime, int maxPower = 110) {
+    cout << "PID Start" << endl;
     // Reset encoder values
     frontLeftMotor.tare_position();
     backLeftMotor.tare_position();
     frontRightMotor.tare_position();
     backRightMotor.tare_position();
-
-    // PID variables decloration and initialization
-    float kP = 0.3;
-    float kI = 0.00001;
-    float kD = 0.1;
-
-    // Proportion variable decloration
-    float proportion;
-    float intergral;
-    int intergralRaw;
-    int derivative;
-
-    // Error variable decloration
-    int error;
-    int lastError;
-
-    float kP_C = 0; //.09
-    int errorDrift;
-    float proportionDrift;
-
-    // Variable so the robot know when it should use intergral
-    const float intergralActiveZone = inchToTicks(10);
-
-    // Variable to limit the value of intergral
-    int intergralPowerLimit = 50 / kI;
-
-    // Final output power/speed
-    int finalPower;
-
-    // Variable to let the PID know when to start the timer
-    bool startTime = false;
-
-    // Variable to log the time when the timer starts
-    int currentTime = 0;
 
     // Convert our waitTimer to milliseconds
     timerValue(waitTime);

@@ -11,6 +11,7 @@ RobotClass::RobotClass() :
     partner(E_CONTROLLER_PARTNER)
 {
     Drivetrain = new DrivetrainClass();
+    Tray = new TrayClass();
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -18,6 +19,8 @@ RobotClass::RobotClass() :
 //                   Runs when the program first starts                     //
 //////////////////////////////////////////////////////////////////////////////
 void RobotClass::initialize() {
+    // Reset encoder value
+    Tray->trayMotor.tare_position();
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -43,9 +46,12 @@ void RobotClass::autonomous() {}
 //               Only runs when the robot is in opcontrol mode              //
 //////////////////////////////////////////////////////////////////////////////
 void RobotClass::opcontrol() {
-    threshold = 15;
+    // Send 'leftVal' and 'rightVal' to the drivetrain motors
+    Drivetrain->update(leftVal = (threshold > master.get_analog(ANALOG_LEFT_Y)) ? 0 : master.get_analog(ANALOG_LEFT_Y), 
+    rightVal = (threshold > master.get_analog(ANALOG_RIGHT_Y)) ? 0 : master.get_analog(ANALOG_RIGHT_Y));
 
-    leftVal = (threshold > master.get_analog(ANALOG_LEFT_Y)) ? 0 : master.get_analog(ANALOG_LEFT_Y);
-    rightVal = (threshold > master.get_analog(ANALOG_RIGHT_Y)) ? 0 : master.get_analog(ANALOG_RIGHT_Y);
-    Drivetrain->update(leftVal, rightVal);
+    // Send inputs to tray
+    Tray->update((master.get_digital(DIGITAL_R1) - master.get_digital(DIGITAL_R2)), master.get_digital(DIGITAL_B));
+    // Wait for the user to let go of button
+    while(master.get_digital(DIGITAL_R1) || master.get_digital(DIGITAL_R2) || master.get_digital(DIGITAL_B)) delay(10);
 }

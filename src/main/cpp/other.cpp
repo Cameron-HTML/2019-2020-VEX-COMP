@@ -301,40 +301,6 @@
 // 			}
 // 		}
 
-// 		if(master.get_digital(DIGITAL_B)) {
-// 			while(master.get_digital(DIGITAL_B)) delay(20);
-
-// 			trayPIDPtr->trayPIDRunning = true;
-
-// 			if(trayPIDPtr->inTarget <= 10) {
-// 				trayPIDPtr->inTarget = 4000;
-// 				trayPIDPtr->powerLimit = 70;
-// 			} else if(trayPIDPtr->inTarget >= 1600) {
-// 				trayPIDPtr->inTarget = 10;
-// 				trayPIDPtr->powerLimit = 80;
-// 			}
-// 		}
-
-// 		// Tray manual control
-// 		if(master.get_digital(DIGITAL_R1) == 1) {
-// 			trayPIDPtr->trayPIDRunning = false;
-// 			trayMotor.move(80);
-// 			trayPIDPtr->inTarget = trayMotor.get_position();
-// 		} else if(master.get_digital(DIGITAL_R2) == 1) {
-// 			trayPIDPtr->trayPIDRunning = false;
-// 			trayMotor.move(-90);
-// 			trayPIDPtr->inTarget = trayMotor.get_position();
-// 		} else {
-// 			if(trayPIDPtr->powerLimit == 80 && trayMotor.get_position() <= 20) {
-// 				trayPIDPtr->trayPIDRunning = false;
-// 				trayMotor.move(0);
-// 			} else {
-// 				if(!trayPIDPtr->trayPIDRunning) {
-// 					trayPIDPtr->trayPIDRunning = true;
-// 				}
-// 			}
-// 		}
-
 // 		// Arm control
 // 		if(master.get_digital(DIGITAL_X) == 1) {
 // 			armPIDPtr->armPIDRunning = false;

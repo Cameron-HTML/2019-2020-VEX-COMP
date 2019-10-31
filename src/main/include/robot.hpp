@@ -6,6 +6,7 @@
 #include "../../../libraries/pros/apix.h"
 
 #include "../include/drivetrain.hpp"
+#include "../include/tray.hpp"
 
 // Namespaces
 using namespace pros;
@@ -18,12 +19,13 @@ class RobotClass {
         Controller partner;
 
         // Init variables
-        int threshold;
-        int leftVal;
-        int rightVal;
+        int threshold = 15;
+        int leftVal = 0;
+        int rightVal = 0;
     public:
-        // Init pointer
+        // Init pointers
         DrivetrainClass* Drivetrain;
+        TrayClass * Tray;
 
         RobotClass();
         static RobotClass* Get() {return TheRobot;}

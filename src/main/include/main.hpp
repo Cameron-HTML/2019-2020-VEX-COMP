@@ -11,5 +11,5 @@
             RobotClass* Robot;
 
             MainClass();
-    }Main;
+    } Main;
 #endif
