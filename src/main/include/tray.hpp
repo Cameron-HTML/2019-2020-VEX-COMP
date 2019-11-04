@@ -36,7 +36,7 @@ class TrayClass {
         int intergralPowerLimit = 50 / kI;
 
         // Variable to limit power
-        int powerLimit = 90;
+        int powerLimit = 80;
 
         // Final output power/speed
         int finalPower = 0;

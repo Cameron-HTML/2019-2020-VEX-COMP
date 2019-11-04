@@ -14,7 +14,7 @@ void DrivetrainClass::update(int leftVal, int rightVal) {
     frontLeftMotor.move(leftVal);
     backLeftMotor.move(leftVal);
     frontRightMotor.move(rightVal);
-    backRightMotor.move(leftVal);
+    backRightMotor.move(rightVal);
 }
 
 void DrivetrainClass::driveTrainLeft(int speed) {

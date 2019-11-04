@@ -2,7 +2,7 @@
 #include "../include/tray.hpp"
 
 TrayClass::TrayClass() :
-    trayMotor(3, E_MOTOR_GEARSET_36, false, E_MOTOR_ENCODER_COUNTS)
+    trayMotor(3, E_MOTOR_GEARSET_36, true, E_MOTOR_ENCODER_COUNTS)
 {
 
 }
@@ -14,12 +14,12 @@ void TrayClass::update(int manual, bool macro) {
         PIDRunning = false;
         trayMotor.move(80);
         target = trayMotor.get_position();
-	} else if(manual == -1) {
+	} else if(manual == -1 && trayMotor.get_position() < 30) {
         PIDRunning = false;
         trayMotor.move(-90);
         target = trayMotor.get_position();
 	} else {
-		if(powerLimit == 80 && trayMotor.get_position() <= 20) {
+		if(powerLimit == 80 && manual == 0) {
             PIDRunning = false;
             trayMotor.move(0);
 		} else {

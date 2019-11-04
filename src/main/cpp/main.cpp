@@ -39,6 +39,7 @@ void competition_initialize() {
 //              Only runs when the robot is in autonomous mode              //
 //////////////////////////////////////////////////////////////////////////////
 void autonomous() {
+    cout << "Starting autonomous!" << endl;
      Main.Robot->autonomous();
 }
 
@@ -47,7 +48,10 @@ void autonomous() {
 //               Only runs when the robot is in opcontrol mode              //
 //////////////////////////////////////////////////////////////////////////////
 void opcontrol() {
-    while (true){
+    cout << "Starting operator control!" << endl;
+    while(true) {
         Main.Robot->opcontrol();
+
+        delay(20);
     }
 }

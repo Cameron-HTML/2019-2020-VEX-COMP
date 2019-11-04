@@ -22,6 +22,7 @@ class RobotClass {
         int threshold = 15;
         int leftVal = 0;
         int rightVal = 0;
+        int trayManual = 0;
     public:
         // Init pointers
         DrivetrainClass* Drivetrain;
