@@ -1,26 +1,26 @@
 // Include drivetrain header file
-#include "../include/tray.hpp"
+#include "../include/arm.hpp"
 
-TrayClass::TrayClass() :
-    trayMotor(3, E_MOTOR_GEARSET_36, true, E_MOTOR_ENCODER_COUNTS)
+ArmClass::ArmClass() :
+    armMotor(19, E_MOTOR_GEARSET_36, true, E_MOTOR_ENCODER_COUNTS)
 {
 
 }
 
-void TrayClass::update(int manual) {
+void ArmClass::update(int manual) {
     // Manual control check || 1 = Forward & -1 Backward & 2 PID off
     switch (manual) {
     case 1:
         PIDRunning = false;
-        trayMotor.move(80);
-        target = trayMotor.get_position();
+        armMotor.move(127);
+        target = armMotor.get_position();
         break;
     case -1:
         PIDRunning = false;
-        trayMotor.move(-90);
-        target = trayMotor.get_position();
+        armMotor.move(-60);
+        target = armMotor.get_position();
         break;
-    default:
+    case 0:
         PIDRunning = true;
         break;
     }
@@ -29,12 +29,10 @@ void TrayClass::update(int manual) {
 }
 
 // Function for the Tray PID control
-void TrayClass::PID() {
+void ArmClass::PID() {
     if(PIDRunning) {
-        powerLimit = powerLimit;
-
         // Calculate how far the robot is from the target
-        error = target - trayMotor.get_position();
+        error = target - armMotor.get_position();
 
         // Calculate the proportion
         proportion = kP * error;
@@ -78,6 +76,6 @@ void TrayClass::PID() {
         }
 
         // Set the motors to the final power
-        trayMotor.move(finalPower);
+        armMotor.move(finalPower);
     }
 }

@@ -8,9 +8,9 @@ using namespace pros;
 using namespace pros::literals;
 using namespace std;
 
-class TrayClass {
+class ArmClass {
     public:
-        Motor trayMotor;
+        Motor armMotor;
 
         int target = 0;
 
@@ -43,7 +43,7 @@ class TrayClass {
 
         int PIDRunning = false;
 
-        TrayClass();
+        ArmClass();
 
         void update(int manual);
         void PID();

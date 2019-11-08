@@ -7,6 +7,8 @@
 
 #include "../include/drivetrain.hpp"
 #include "../include/tray.hpp"
+#include "../include/arm.hpp"
+#include "../include/intake.hpp"
 
 // Namespaces
 using namespace pros;
@@ -20,13 +22,16 @@ class RobotClass {
 
         // Init variables
         int threshold = 15;
+        // -1 for mirror || 1 for normal
+        int isMirrored = 1;
         int leftVal = 0;
         int rightVal = 0;
-        int trayManual = 0;
     public:
         // Init pointers
         DrivetrainClass* Drivetrain;
-        TrayClass * Tray;
+        IntakeClass* Intake;
+        TrayClass* Tray;
+        ArmClass* Arm;
 
         RobotClass();
         static RobotClass* Get() {return TheRobot;}

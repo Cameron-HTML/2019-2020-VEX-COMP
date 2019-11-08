@@ -44,7 +44,7 @@ class DrivetrainClass {
         float proportionDrift = 0.0;
 
         // Variable so the robot know when it should use intergral
-        const float intergralActiveZone = inchToTicks(10);
+        float intergralActiveZone = 0.0;
 
         // Variable to limit the value of intergral
         int intergralPowerLimit = 50 / kI;
@@ -62,7 +62,7 @@ class DrivetrainClass {
 
         void update(int leftVal, int rightVal);
         void PID(float target, float waitTime, int maxPower);
-        void turn(float target, float waitTime, int maxPower);
+        void turnPID(float target, float waitTime, int maxPower);
         void driveTrainLeft(int speed);
         void driveTrainRight(int speed);
         void driveTrainTurn(int speed);
