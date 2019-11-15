@@ -37,7 +37,7 @@ EXCLUDE_SRC_FROM_LIB+=$(foreach file, $(SRCDIR)/main,$(foreach cext,$(CEXTS),$(f
 # that are in the the include directory get exported
 TEMPLATE_FILES=$(INCDIR)/**/*.h $(INCDIR)/**/*.hpp
 
-.DEFAULT_GOAL=quick
+.DEFAULT_GOAL=all
 
 ################################################################################
 ################################################################################

@@ -26,6 +26,35 @@ lv_obj_t * blueRightButton;
 lv_obj_t * confirmContainer;
 lv_obj_t * confirmButton;
 
+lv_obj_t * redTile1;
+lv_obj_t * redTile2;
+lv_obj_t * blueTile1;
+lv_obj_t * blueTile2;
+
+lv_obj_t * tower1;
+lv_obj_t * tower2;
+lv_obj_t * tower3;
+lv_obj_t * tower4;
+lv_obj_t * tower5;
+lv_obj_t * tower6;
+lv_obj_t * tower7;
+
+static lv_style_t autoFieldStyle;
+static lv_style_t redButtonStyle;
+static lv_style_t redButtonStyleTGL;
+static lv_style_t blueButtonStyle;
+static lv_style_t blueButtonStyleTGL;
+static lv_style_t buttonContainerStyle;
+static lv_style_t confirmButtonStyle;
+static lv_style_t confirmButtonStyleTGL;
+
+static lv_style_t redTileStyle;
+static lv_style_t blueTileStyle;
+
+static lv_style_t towerStyle;
+static lv_style_t redTowerStyle;
+static lv_style_t blueTowerStyle;
+
 static lv_res_t buttonPressEvent(lv_obj_t * btn) {
     lv_btn_set_state(btn, LV_BTN_STATE_TGL_REL);
 
@@ -54,10 +83,51 @@ static lv_res_t buttonPressEvent(lv_obj_t * btn) {
         lv_obj_align(confirmButton, NULL, LV_ALIGN_IN_LEFT_MID, 155, 80);
         selectedAuto = 4;
     }
+
+    if(confirmButtonStyle.body.opa == 0) {
+        confirmButtonStyle.body.opa = 255;
+        lv_btn_set_state(confirmButton, LV_BTN_STATE_TGL_PR);
+    }
+
 }
 
 static lv_res_t confirmSelected(lv_obj_t * btn) {
-    cout << selectedAuto << endl;
+    switch (selectedAuto) {
+    case 1:
+        lv_obj_del(redRightButton);
+        lv_obj_del(blueLeftButton);
+        lv_obj_del(blueRightButton);
+        lv_obj_del(confirmContainer);
+        lv_obj_del(confirmButton);
+        lv_obj_del(autoField);
+        break;
+     case 2:
+        lv_obj_del(redLeftButton);
+        lv_obj_del(blueLeftButton);
+        lv_obj_del(blueRightButton);
+        lv_obj_del(confirmContainer);
+        lv_obj_del(confirmButton);
+        lv_obj_del(autoField);
+        break;
+     case 3:
+        lv_obj_del(redLeftButton);
+        lv_obj_del(redRightButton);
+        lv_obj_del(blueRightButton);
+        lv_obj_del(confirmContainer);
+        lv_obj_del(confirmButton);
+        lv_obj_del(autoField);
+        break;
+     case 4:
+        lv_obj_del(redLeftButton);
+        lv_obj_del(redRightButton);
+        lv_obj_del(blueLeftButton);
+        lv_obj_del(confirmContainer);
+        lv_obj_del(confirmButton);
+        lv_obj_del(autoField);
+        break;
+    default:
+        break;
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -65,59 +135,80 @@ static lv_res_t confirmSelected(lv_obj_t * btn) {
 //                   Runs when the program first starts                     //
 //////////////////////////////////////////////////////////////////////////////
 void initialize() {
-    leftIntake.setBrakeMode(AbstractMotor::brakeMode::hold);
-	rightIntake.setBrakeMode(AbstractMotor::brakeMode::hold);
+    pros::delay(100);
 
     // Object styles
-    static lv_style_t autoFieldStyle;
     lv_style_copy(&autoFieldStyle, &lv_style_plain_color);
     autoFieldStyle.body.main_color = LV_COLOR_GRAY;
     autoFieldStyle.body.grad_color = LV_COLOR_GRAY;
 
-    static lv_style_t redButtonStyle;
     lv_style_copy(&redButtonStyle, &lv_style_plain_color);
     redButtonStyle.body.main_color = LV_COLOR_RED;
     redButtonStyle.body.grad_color = LV_COLOR_RED;
     redButtonStyle.body.border.color = LV_COLOR_WHITE;
     redButtonStyle.body.border.width = 1;
 
-    static lv_style_t redButtonStyleTGL;
     lv_style_copy(&redButtonStyleTGL, &lv_style_plain_color);
     redButtonStyleTGL.body.main_color = LV_COLOR_MAKE(245, 87, 76);
     redButtonStyleTGL.body.grad_color = LV_COLOR_MAKE(245, 87, 76);
     redButtonStyleTGL.body.border.color = LV_COLOR_WHITE;
     redButtonStyleTGL.body.border.width = 1;
 
-    static lv_style_t blueButtonStyle;
     lv_style_copy(&blueButtonStyle, &lv_style_plain_color);
     blueButtonStyle.body.main_color = LV_COLOR_BLUE;
     blueButtonStyle.body.grad_color = LV_COLOR_BLUE;
     blueButtonStyle.body.border.color = LV_COLOR_WHITE;
     blueButtonStyle.body.border.width = 1;
 
-    static lv_style_t blueButtonStyleTGL;
     lv_style_copy(&blueButtonStyleTGL, &lv_style_plain_color);
     blueButtonStyleTGL.body.main_color = LV_COLOR_MAKE(0, 0, 139);
     blueButtonStyleTGL.body.grad_color = LV_COLOR_MAKE(0, 0, 139);
     blueButtonStyleTGL.body.border.color = LV_COLOR_WHITE;
     blueButtonStyleTGL.body.border.width = 1;
 
-    static lv_style_t buttonContainerStyle;
     lv_style_copy(&buttonContainerStyle, &lv_style_plain_color);
     buttonContainerStyle.body.main_color = LV_COLOR_GRAY;
     buttonContainerStyle.body.grad_color = LV_COLOR_GRAY;
     buttonContainerStyle.body.border.color = LV_COLOR_WHITE;
     buttonContainerStyle.body.border.width = 1;
 
-    static lv_style_t confirmButtonStyle;
     lv_style_copy(&confirmButtonStyle, &lv_style_plain_color);
     confirmButtonStyle.body.main_color = LV_COLOR_MAKE(0, 255, 0);
     confirmButtonStyle.body.grad_color = LV_COLOR_MAKE(0, 255, 0);
+    confirmButtonStyle.body.opa = 0;
 
-    static lv_style_t confirmButtonStyleTGL;
     lv_style_copy(&confirmButtonStyleTGL, &lv_style_plain_color);
     confirmButtonStyleTGL.body.main_color = LV_COLOR_MAKE(50, 205, 50);
     confirmButtonStyleTGL.body.grad_color = LV_COLOR_MAKE(50, 205, 50);
+
+    lv_style_copy(&towerStyle, &lv_style_plain_color);
+    towerStyle.body.main_color = LV_COLOR_MAKE(0, 0, 0);
+    towerStyle.body.grad_color = LV_COLOR_MAKE(0, 0, 0);
+    towerStyle.body.radius = LV_RADIUS_CIRCLE;
+    towerStyle.body.border.color = LV_COLOR_WHITE;
+    towerStyle.body.border.width = 3;
+
+    lv_style_copy(&redTowerStyle, &lv_style_plain_color);
+    redTowerStyle.body.main_color = LV_COLOR_RED;
+    redTowerStyle.body.grad_color = LV_COLOR_RED;
+    redTowerStyle.body.radius = LV_RADIUS_CIRCLE;
+    redTowerStyle.body.border.color = LV_COLOR_WHITE;
+    redTowerStyle.body.border.width = 3;
+
+    lv_style_copy(&blueTowerStyle, &lv_style_plain_color);
+    blueTowerStyle.body.main_color = LV_COLOR_BLUE;
+    blueTowerStyle.body.grad_color = LV_COLOR_BLUE;
+    blueTowerStyle.body.radius = LV_RADIUS_CIRCLE;
+    blueTowerStyle.body.border.color = LV_COLOR_WHITE;
+    blueTowerStyle.body.border.width = 3;
+
+    lv_style_copy(&redTileStyle, &lv_style_plain_color);
+    redTileStyle.body.main_color = LV_COLOR_RED;
+    redTileStyle.body.grad_color = LV_COLOR_RED;
+
+    lv_style_copy(&blueTileStyle, &lv_style_plain_color);
+    blueTileStyle.body.main_color = LV_COLOR_BLUE;
+    blueTileStyle.body.grad_color = LV_COLOR_BLUE;
 
     // Field object
     autoField = lv_obj_create(lv_scr_act(), NULL);
@@ -178,8 +269,67 @@ void initialize() {
     lv_btn_set_style(confirmButton, LV_BTN_STYLE_PR, &confirmButtonStyle);
     lv_btn_set_style(confirmButton, LV_BTN_STYLE_INA, &confirmButtonStyle);
     lv_obj_set_size(confirmButton, 50, 50);
-    lv_obj_align(confirmButton, NULL, LV_ALIGN_IN_LEFT_MID, 155, -80);
+    lv_obj_align(confirmButton, NULL, LV_ALIGN_IN_LEFT_MID, 0, 0);
     lv_btn_set_action(confirmButton, LV_BTN_ACTION_CLICK, confirmSelected);
+    lv_btn_set_state(confirmButton, LV_BTN_STYLE_INA);
+
+    redTile1 = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_size(redTile1, 40, 40);
+    lv_obj_set_style(redTile1, &redTileStyle);
+    lv_obj_align(redTile1, NULL, LV_ALIGN_IN_TOP_MID, 50, 0);
+
+    redTile2 = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_size(redTile2, 40, 40);
+    lv_obj_set_style(redTile2, &redTileStyle);
+    lv_obj_align(redTile2, NULL, LV_ALIGN_IN_TOP_MID, 10, 40);
+
+    blueTile1 = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_size(blueTile1, 40, 40);
+    lv_obj_set_style(blueTile1, &blueTileStyle);
+    lv_obj_align(blueTile1, NULL, LV_ALIGN_IN_TOP_RIGHT, -40, 0);
+
+    blueTile2 = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_size(blueTile2, 40, 40);
+    lv_obj_set_style(blueTile2, &blueTileStyle);
+    lv_obj_align(blueTile2, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, 40);
+
+    tower1 = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_size(tower1, 20, 20);
+    lv_obj_set_style(tower1, &towerStyle);
+    lv_obj_align(tower1, NULL, LV_ALIGN_IN_RIGHT_MID, -109, 0);
+
+    tower2 = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_size(tower2, 20, 20);
+    lv_obj_set_style(tower2, &towerStyle);
+    lv_obj_align(tower2, NULL, LV_ALIGN_IN_RIGHT_MID, -109, 74);
+
+    tower3 = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_size(tower3, 20, 20);
+    lv_obj_set_style(tower3, &towerStyle);
+    lv_obj_align(tower3, NULL, LV_ALIGN_IN_RIGHT_MID, -109, -74);
+
+    tower4 = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_size(tower4, 20, 20);
+    lv_obj_set_style(tower4, &towerStyle);
+    lv_obj_align(tower4, NULL, LV_ALIGN_IN_RIGHT_MID, -189, 0);
+
+    tower5 = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_size(tower5, 20, 20);
+    lv_obj_set_style(tower5, &towerStyle);
+    lv_obj_align(tower5, NULL, LV_ALIGN_IN_RIGHT_MID, -28, 0);
+
+    tower6 = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_size(tower6, 20, 20);
+    lv_obj_set_style(tower6, &redTowerStyle);
+    lv_obj_align(tower6, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, -167, 0);
+
+    tower7 = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_size(tower7, 20, 20);
+    lv_obj_set_style(tower7, &blueTowerStyle);
+    lv_obj_align(tower7, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, -50, 0);
+
+    leftIntake.setBrakeMode(AbstractMotor::brakeMode::hold);
+	rightIntake.setBrakeMode(AbstractMotor::brakeMode::hold);
 }
 
 //////////////////////////////////////////////////////////////////////////////
