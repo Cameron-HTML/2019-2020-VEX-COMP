@@ -35,6 +35,7 @@
 #define PROS_USE_LITERALS
 
 #include "api.h"
+#include "pros/apix.h"
 #include "okapi/api.hpp"
 #include <IOStream>
 
