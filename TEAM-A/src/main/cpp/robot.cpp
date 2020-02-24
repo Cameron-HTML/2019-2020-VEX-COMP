@@ -57,17 +57,17 @@ void RobotClass::opcontrol() {
     Intake->update(master.get_digital(DIGITAL_R1) - master.get_digital(DIGITAL_R2));
 
     // Send inputs to tray
-    if(master.get_digital(DIGITAL_L1) && Tray->trayMotor.get_position() < 15) {
-        Tray->update(master.get_digital(DIGITAL_L2));
+    if(partner.get_digital(DIGITAL_R1) && Tray->trayMotor.get_position() < 15) {
+        Tray->update(partner.get_digital(DIGITAL_R2));
     } else {
-        Tray->update(master.get_digital(DIGITAL_L2) - master.get_digital(DIGITAL_L1));
+        Tray->update(partner.get_digital(DIGITAL_R2) - partner.get_digital(DIGITAL_R1));
 
     }
 
     // Send inputs to arm
-    if(master.get_digital(DIGITAL_Y) && Arm->armMotor.get_position() < 100) {
-        Arm->update(master.get_digital(DIGITAL_X));
+    if(partner.get_digital(DIGITAL_L1) && Arm->armMotor.get_position() < 100) {
+        Arm->update(partner.get_digital(DIGITAL_L2));
     } else {
-        Arm->update(master.get_digital(DIGITAL_X) - master.get_digital(DIGITAL_Y));
+        Arm->update(partner.get_digital(DIGITAL_L2) - partner.get_digital(DIGITAL_L1));
     }
 }
