@@ -84,7 +84,6 @@
 #define LV_COLOR_TRANSP                                                        \
   LV_COLOR_LIME /*Images pixels with this color will not be drawn (with chroma \
                    keying)*/
-          
 
 /*Text settings*/
 #define LV_TXT_UTF8 1 /*Enable UTF-8 coded Unicode character usage */
@@ -294,7 +293,7 @@
 #define USE_LV_BTNM 1
 
 /*Keyboard (dependencies: lv_btnm)*/
-#define USE_LV_KB 0
+#define USE_LV_KB 1
 
 /*Check box (dependencies: lv_btn, lv_label)*/
 #define USE_LV_CB 1
