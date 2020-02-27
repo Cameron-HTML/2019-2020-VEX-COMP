@@ -65,9 +65,9 @@ void RobotClass::opcontrol() {
     }
 
     // Send inputs to arm
-    if(master.get_digital(DIGITAL_Y) && Arm->armMotor.get_position() < 100) {
-        Arm->update(master.get_digital(DIGITAL_X));
+    if(master.get_digital(DIGITAL_DOWN) && Arm->armMotor.get_position() < 100) {
+        Arm->update(master.get_digital(DIGITAL_B));
     } else {
-        Arm->update(master.get_digital(DIGITAL_X) - master.get_digital(DIGITAL_Y));
+        Arm->update(master.get_digital(DIGITAL_B) - master.get_digital(DIGITAL_DOWN));
     }
 }
