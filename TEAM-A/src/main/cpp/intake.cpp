@@ -2,8 +2,8 @@
 #include "../include/intake.hpp"
 
 IntakeClass::IntakeClass():
-    leftIntake(2, E_MOTOR_GEARSET_18, true, E_MOTOR_ENCODER_COUNTS),
-    rightIntake(8, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_COUNTS)
+    leftIntake(4, E_MOTOR_GEARSET_18, true, E_MOTOR_ENCODER_COUNTS),
+    rightIntake(19, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_COUNTS)
 {
     leftIntake.set_brake_mode(E_MOTOR_BRAKE_HOLD);
     rightIntake.set_brake_mode(E_MOTOR_BRAKE_HOLD);
